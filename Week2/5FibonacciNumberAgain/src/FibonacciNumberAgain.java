@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class FibonacciNumberAgain {
@@ -40,45 +39,55 @@ public class FibonacciNumberAgain {
 
         //the idea is to use pisano period to reduce large fibonacci number to smaller/more manageable fib number
         //and calculate modulus of that number since everything has a repeated sequence.
-        System.out.println(pisano(m));
-
+        int p = pisanoPeriod(m);
+        //work out the remainder of the fib num
+        int newFibNum = (int) (n % p);
+        System.out.println(fibNumFast(newFibNum, m));
 
     }
 
-    public static long fibNumNaive(long n, int m) {
+
+    public static int pisanoPeriod(int m) {
+        //define first two sequence of fib number
+        int prev = 0;
+        int curr = 1;
+        //pisano count
+        int res = 0;
+        int i = 0;
+
+        //should loop until found sequence '01'
+        while (true) {
+            int temp = curr;
+            //calculates the
+            curr = (prev + curr) % m;
+            prev = temp;
+            i++;
+            if (prev == 0 && curr == 1) {
+                res = i;
+                break;
+            }
+        }
+
+        return res;
+    }
+
+    public static long fibNumFast(long n, int m) {
         long previous = 0;
         long current = 1;
 
         if (n <= 1) {
-            System.out.println(n);
             return n;
         }
+
+        //add the modulus of the current and previous sum
         for (long i = 0; i < n - 1; i++) {
-            long temp = previous + current;
-            previous = current;
+            long temp = previous % m + current % m;
+            previous = current % m;
             current = temp;
+            //System.out.println(previous + " " + current);
         }
         //System.out.println(current);
         return current % m;
     }
 
-    public static long pisano(long m)
-    {
-        long prev = 0;
-        long curr = 1;
-        long res = 0;
-
-        for(int i = 0; i < m * m; i++)
-        {
-            long temp = 0;
-            temp = curr;
-            curr = (prev + curr) % m;
-            prev = temp;
-            System.out.println("prev:"+prev+" curr:"+curr+" res:"+res);
-            //result always repeats on 01 pattern
-            if (prev == 0 && curr == 1)
-                res= i + 1;
-        }
-        return res;
-    }
 }
